@@ -1,25 +1,32 @@
 package com.educandoweb.course.entities;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
-@Table(name = "tb_category")
+@Table(name = "tb_categories")
+
 public class Category implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
 
+//	@JsonIgnore
+//	@OneToMany(mappedBy = "categories") // uma categoria pode pertencer a varios produtos
+	@Transient
+	private Set<Product> products = new HashSet<>(); // associação: um categoria pode ter vários produtos.
 	public Category() {
 	}
 
@@ -44,6 +51,10 @@ public class Category implements Serializable {
 		this.name = name;
 	}
 
+	public Set<Product> getProducts() {
+		return products;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -61,9 +72,5 @@ public class Category implements Serializable {
 		return Objects.equals(id, other.id);
 	}
 
-	@Override
-	public String toString() {
-		return "Category [id=" + id + ", name=" + name + "]";
-	};
 
 }
