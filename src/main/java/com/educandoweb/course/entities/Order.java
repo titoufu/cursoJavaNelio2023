@@ -37,14 +37,13 @@ public class Order implements Serializable {
 	@ManyToOne // aqui eu declaro que um cliente pode ter muitos pedidos.
 	@JoinColumn(name = "client_id") // declaração da chave estrangeira
 	private User client; // associação ( um pedido tem um cliente)
-	
+
 	@OneToMany(mappedBy = "id.order")
 	private Set<OrderItem> items = new HashSet<>(); // SET é uma lista que não aceita elementos duplicados
 
-	@OneToOne(mappedBy="order",cascade=CascadeType.ALL)
+	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
 	private Payment payment;
 
-	
 	public Order() {
 		super();
 	}
@@ -106,6 +105,14 @@ public class Order implements Serializable {
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
+	}
+
+	public Double getTotal() {
+		double sum = 0.0;
+		for (OrderItem x : items) {
+			sum = sum + x.getSubTotal();
+		}
+		return sum;
 	}
 
 	@Override
